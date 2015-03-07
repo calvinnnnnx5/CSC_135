@@ -88,15 +88,49 @@ public class A1
     //
     public void statemt()
     {
-          
+        m
     }
     public void asignmt()
     {
-          
+        ident();
+        match('~');
+        exprsn();
+        match(';');
     }
     public void ifstmt()
     {
-          
+        match("I");
+        comprsn();
+        match('@');
+        while((token() == 'Z'))
+        ||(token() == '_')
+        ||(token() == 'X')
+        ||(token() == 'Y')
+        ||(token() == 'W')
+        ||(token() == 'I')
+        ||(token() == 'R')
+        ||(token() == 'U')
+        {
+            statemt();
+        }
+        
+        if (token() == ('%'))
+        {
+            match('%');
+            
+            while((token() == 'Z')
+            ||(token() == '_')
+            ||(token() == 'X')
+            ||(token() == 'Y')
+            ||(token() == 'W')
+            ||(token() == 'I')
+            ||(token() == 'R')
+            ||(token() == 'U'))
+            {
+               statemt();
+            }
+        }
+        match('&');
     }
     //
     public void until()
@@ -105,16 +139,27 @@ public class A1
     }
     public void read()
     {
-          
+        match('R');
+        ident();
+        while (token()==(','))
+        {
+            match(',');
+            ident();
+        }
+        match(';');
     }
     //
     public void write()
     {
-            
+        
     }
     public void comprsn()
     {
-          
+        match('(');
+        oprnd();
+        opratr();
+        oprnd();
+        match(')');
     }
     public void exprsn()
     {
