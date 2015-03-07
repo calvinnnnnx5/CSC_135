@@ -2,329 +2,404 @@
 //CSC 135 A1
 //recursive-descent recognizer
 
-
 /*
 compiling and running instructions
-1. open terminal/command prompt
+1. open terminal/command-prompt
 2. navigate to the folder that contains this program
 3. run javac A1.java then java A1
 
 program ::= statemt {statemt}
-       statemt ::= asignmt | ifstmt | until | read | write
-       *asignmt ::= ident ~ exprsn ;
-       *ifstmt  ::= I comprsn @ {statemt} [% {statemt}] &
-       until   ::= U ( comprsn ) D {statemt} \
-       *read    ::= R ident {, ident} ;
-       write   ::= W ident {, ident} ;
-       *comprsn ::= ( oprnd opratr oprnd )
-       *exprsn  ::= factor {+ factor}
-       *factor  ::= oprnd {* oprnd}
-       *oprnd   ::= integer | ident | ( exprsn )
-       *opratr  ::= < | = | > | !
-       *ident   ::= letter {char}
-       *char    ::= letter | digit
-       *integer ::= digit {digit}
-       *letter  ::= _ | X | Y | Z
-       *digit   ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+  statemt ::= asignmt | ifstmt | until | read | write
+  asignmt ::= ident ~ exprsn ;
+  ifstmt  ::= I comprsn @ {statemt} [% {statemt}] &
+  until   ::= U ( comprsn ) D {statemt} \
+  read    ::= R ident {, ident} ;
+  write   ::= W ident {, ident} ;
+  comprsn ::= ( oprnd opratr oprnd )
+  exprsn  ::= factor {+ factor}
+  factor  ::= oprnd {* oprnd}
+  oprnd   ::= integer | ident | ( exprsn )
+  opratr  ::= < | = | > | !
+  ident   ::= letter {char}
+  char    ::= letter | digit
+  integer ::= digit {digit}
+  letter  ::= _ | X | Y | Z
+  digit   ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
-	The tokens are: ~ ; I @ % & U ( ) D \ R , W + * < = > ! _ X Y Z 0 1 2 3 4 5 6 7 8 9
-   	
-      Nonterminals are shown as lowercase words.
+  the tokens are: ~ ; I @ % & U ( ) D \ R , W + * < = > ! _ X Y Z 0 1 2 3 4 5 6 7 8 9
+  nonterminals are shown as lowercase words.
 */
 
+//test with
+/*
+  RYXZ__6,Z;$
+  WY4X8,X,Z;U((33<Z))D\$
+  X1~(123*YZ+1);$
+  I(1=X)@U((3>Y))DRZ,Z123;\%&$
+*/
+
+import java.io.*;
 public class A1
 {
-    public String userInput; //String inputted by user
-    static int index = 0;
-    static int errorFlag = 0;
+  //string input from user
+  static String inputString; 
+  static int index = 0;
+  static int errorFlag = 0;
 
-    private char token()
-    {
-        return(inputString.charAt(index));
-    }
+  //main method to kick off program
+  public static void main (String[] args) throws IOException
+  {
+    A1 recognizer = new A1();
+    BufferedReader input = new BufferedReader
+      (new InputStreamReader(System.in));
 
-    private void advancePtr()
-    {
-        if (index < (inputString.length() -1))
-        {
-            index++;
-        }
-    }
+    System.out.print("\n" + "enter an expression: ");
+    inputString = input.readLine();
+    recognizer.start();
+  }
 
-    private void match(char T)
-    {
-        if (T == token()) advancePtr();
-        {
-            else error();
-        }
-    }
+  private char token()
+  {
+    return(inputString.charAt(index));
+  }
 
-    public void error()
+  private void advancePtr()
+  {
+    if (index < (inputString.length() -1))
     {
-        System.out.println("error at position: " + index);
-        errorFlag = 1;
-        advancePtr();
+      index++;
     }
+  }
 
-    public void start()
+  private void match(char T)
+  {
+    if (T == token()) 
     {
-        program();
-        match('$');
-        if (errorFlag == 0)
-        {
-            System.out.println("legal" + "\n");
-        }
-        else
-        {
-            System.out.println("errors detected" + "\n");
-        }
+      advancePtr();
     }
+    else 
+    {
+      error();
+    }
+  }
 
-    //
-    public void program()
-    {
+  public void error()
+  {
+    System.out.println("error at position: " + index);
+    errorFlag = 1;
+    advancePtr();
+  }
 
-    }
-    //
-    public void statemt()
+  public void start()
+  {
+    program();
+    match('$');
+    if (errorFlag == 0)
     {
-        m
+      System.out.println("legal" + "\n");
     }
-    public void asignmt()
+    else
     {
-        ident();
-        match('~');
-        exprsn();
-        match(';');
+      System.out.println("errors found" + "\n");
     }
-    public void ifstmt()
+  }
+
+  //methods to deal with every category
+  public void program()
+  {
+    do
     {
-        match("I");
-        comprsn();
-        match('@');
-        while((token() == 'Z'))
-        ||(token() == '_')
-        ||(token() == 'X')
-        ||(token() == 'Y')
-        ||(token() == 'W')
-        ||(token() == 'I')
-        ||(token() == 'R')
-        ||(token() == 'U')
-        {
-            statemt();
-        }
-        
-        if (token() == ('%'))
-        {
-            match('%');
-            
-            while((token() == 'Z')
-            ||(token() == '_')
-            ||(token() == 'X')
-            ||(token() == 'Y')
-            ||(token() == 'W')
-            ||(token() == 'I')
-            ||(token() == 'R')
-            ||(token() == 'U'))
-            {
-               statemt();
-            }
-        }
-        match('&');
+      statemt();
     }
-    //
-    public void until()
-    {
+    while(((token() == 'Z')
+    || (token() == '_')
+    || (token()=='X')
+    || (token()=='Y')
+    || (token()=='W')
+    || (token()=='I')
+    || (token()=='R')
+    || (token()=='U'))); 
           
-    }
-    public void read()
-    {
-        match('R');
-        ident();
-        while (token()==(','))
-        {
-            match(',');
-            ident();
-        }
-        match(';');
-    }
-    //
-    public void write()
-    {
-        
-    }
-    public void comprsn()
-    {
-        match('(');
-        oprnd();
-        opratr();
-        oprnd();
-        match(')');
-    }
-    public void exprsn()
-    {
-        factor();
-        while (token() == ('+'))
-        {
-            match('+');
-            factor();
-        }
-    }
-    public void factor()
-    {
-        oprnd();
-        while (token() == ('*'))
-        {
-            match('*');
-            oprnd();
-        }
-    }
-    public void oprnd()
-    {
-        if (token() == ('('))
-        {
-            match(('('));
-            exprsn();
-            match(')');
-        }
-        else if (((token() == '0')
-        ||(token() == '1')
-        ||(token()=='2')
-        ||(token()=='3')
-        ||(token()=='4')
-        ||(token()=='5')
-        ||(token()=='6')
-        ||(token()=='7')
-        ||(token()=='8')
-        ||(token()=='9')))
-        {
-            integer();
-        }
-        else
-        {
-            ident();
-        }
-    }
-    public void opratr()
-    {
-        if ((token() == '>') 
-        || (token() == '<')   
-        || (token() == '=') 
-        || (token() == '!'))
-        {
-            match( token());
-        } 
-        else
-        {
-            error();
-        }
-    }
+    match('$');
+  }
     
-    public void ident()
+  public void statemt()
+  {
+    if (token()==('I'))
     {
-        letter();
-        while (((token() == '0')
-        ||(token() == '1')
-        ||(token() == '2')
-        ||(token() == '3')
-        ||(token() == '4')
-        ||(token() == '5')
-        ||(token() == '6')
-        ||(token() == '7')
-        ||(token() == '8')
-        ||(token() == '9')
-        ||(token() == 'Z')
-        ||(token() == '_')
-        ||(token() == 'Y')
-        ||(token() == 'X')))
-        {
-            char();
-        }
+      ifstmt();
+    }
+    else if(token()==('U'))
+    {
+      until();
+    }
+    else if(token()==('R'))
+    {
+      read();
+    }
+    else if (token() == ('W'))
+    {
+      write();
+    }
+    else 
+    {
+      asignmt();
+    }
+  }
+
+  public void asignmt()
+  {
+    ident();
+    match('~');
+    exprsn();
+    match(';');
+  }
+
+  public void ifstmt()
+  {
+    match('I');
+    comprsn();
+    match('@');
+    while((token() == 'Z')
+    || (token() == '_')
+    || (token() == 'X')
+    || (token() == 'Y')
+    || (token() == 'W')
+    || (token() == 'I')
+    || (token() == 'R')
+    || (token() == 'U'))
+    {
+      statemt();
     }
 
-    private void char()
+    if (token() == ('%'))
     {
-        if (((token() == '0')
-        ||(token() == '1')
-        ||(token()=='2')
-        ||(token()=='3')
-        ||(token()=='4')
-        ||(token()=='5')
-        ||(token()=='6')
-        ||(token()=='7')
-        ||(token()=='8')
-        ||(token()=='9'))){
-            digit();
-        }
-        else 
-        {
-            letter();
-        }  
+      match('%');
+      while((token() == 'Z')
+      || (token() == '_')
+      || (token() == 'X')
+      || (token() == 'Y')
+      || (token() == 'W')
+      || (token() == 'I')
+      || (token() == 'R')
+      || (token() == 'U'))
+      {
+        statemt();
+      }
     }
+    match('&');
+  }
 
-    public void integer()
+  public void until()
+  {
+    match('U');
+    match('(');
+    comprsn();
+    match(')');
+    match('D');
+    while((token() == 'Z')
+    || (token() == '_')
+    || (token() == 'Y')
+    || (token() == 'X')
+    || (token() == 'W')
+    || (token() == 'I')
+    || (token() == 'R')
+    || (token() == 'U')) 
     {
-        do
-        {
-            digit();
-        }  
-        while(((token() == '0')
-            ||(token() == '1')
-            ||(token()=='2')
-            ||(token()=='3')
-            ||(token()=='4')
-            ||(token()=='5')
-            ||(token()=='6')
-            ||(token()=='7')
-            ||(token()=='8')
-            ||(token()=='9'))); 
-        }
+      statemt();
     }
+    match('\\');
+  }
 
-    public void letter()
+  public void read()
+  {
+    match('R');
+    ident();
+    while (token()==(','))
     {
-        if ((token() == 'Z')
-        || (token() = '_') 
-        || (token() = 'Y') 
-        || (token() = 'X'))
-        {
-            match( token());
-        }
-        else
-        {
-            error();
-        }
+      match(',');
+      ident();
     }
-  
-    public void digit()
+    match(';');
+  }
+
+  public void write()
+  {
+    match('W');
+    ident();
+    while (token()==(','))
     {
-        if ((token() == '0'))
-        ||(token() == '1')
-        ||(token() == '2')
-        ||(token() == '3')
-        ||(token() == '4')
-        ||(token() == '5')
-        ||(token() == '6')
-        ||(token() == '7')
-        ||(token() == '8')
-        ||(token() == '9')
-        {
-            match(token());
-        }
-        else
-        {
-            error();
-        }
+      match(',');
+      ident();
     }
+    match(';');
+  }
 
-    public static void main (String[] args)
+  public void comprsn()
+  {
+    match('(');
+    oprnd();
+    opratr();
+    oprnd();
+    match(')');
+  }
+
+  public void exprsn()
+  {
+    factor();
+    while (token() == ('+'))
     {
-        A1 recognizer = new A1();
-        BufferedReader input = new BufferedReader
-          (new InputStreamReader(System.in));
+      match('+');
+      factor();
+    }
+  }
 
-        System.out.print("\n" + "enter an expression: ");
-        inputString = input.readLine();
-        rec.start();
+  public void factor()
+  {
+    oprnd();
+    while (token() == ('*'))
+    {
+      match('*');
+      oprnd();
+    }
+  }
+
+  public void oprnd()
+  {
+    if (token() == ('('))
+    {
+      match(('('));
+      exprsn();
+      match(')');
+    }
+    else if (((token() == '0')
+    || (token() == '1')
+    || (token()=='2')
+    || (token()=='3')
+    || (token()=='4')
+    || (token()=='5')
+    || (token()=='6')
+    || (token()=='7')
+    || (token()=='8')
+    || (token()=='9')))
+    {
+      integer();
+    }
+    else
+    {
+      ident();
+    }
+  }
+
+  public void opratr()
+  {
+    if ((token() == '>')
+    || (token() == '<')
+    || (token() == '=')
+    || (token() == '!'))
+    {
+      match( token());
+    }
+    else
+    {
+      error();
+    }
+  }
+
+  public void ident()
+  {
+    letter();
+    while (((token() == '0')
+    || (token() == '1')
+    || (token() == '2')
+    || (token() == '3')
+    || (token() == '4')
+    || (token() == '5')
+    || (token() == '6')
+    || (token() == '7')
+    || (token() == '8')
+    || (token() == '9')
+    || (token() == 'Z')
+    || (token() == '_')
+    || (token() == 'Y')
+    || (token() == 'X')))
+    {
+      charious();
+    }
+  }
+
+  private void charious()
+  {
+    if (((token() == '0')
+    || (token() == '1')
+    || (token()=='2')
+    || (token()=='3')
+    || (token()=='4')
+    || (token()=='5')
+    || (token()=='6')
+    || (token()=='7')
+    || (token()=='8')
+    || (token()=='9')))
+    {
+      digit();
+    }
+    else
+    {  
+      letter();
+    }   
+  }
+
+  public void integer()
+  {
+    do
+    {
+      digit();
+    }
+    while(((token() == '0')
+    || (token() == '1')
+    || (token()=='2')
+    || (token()=='3')
+    || (token()=='4')
+    || (token()=='5')
+    || (token()=='6')
+    || (token()=='7')
+    || (token()=='8')
+    || (token()=='9')));
+  }
+    
+  public void letter()
+  {
+    if ((token() == 'Z')
+    || (token() == '_')
+    || (token() == 'Y')
+    || (token() == 'X'))
+    {
+      match( token());
+    }
+    else 
+    {
+      error(); 
+    }  
+  }
+
+  public void digit()
+  {
+    if ((token() == '0')
+    || (token() == '1')
+    || (token() == '2')
+    || (token() == '3')
+    || (token() == '4')
+    || (token() == '5')
+    || (token() == '6')
+    || (token() == '7')
+    || (token() == '8')
+    || (token() == '9'))
+    {
+      match(token());
+    }
+    else
+    {
+      error();
+    }
   }
 }
