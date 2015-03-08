@@ -30,14 +30,6 @@ program ::= statemt {statemt}
   nonterminals are shown as lowercase words.
 */
 
-//test with
-/*
-  RYXZ__6,Z;$
-  WY4X8,X,Z;U((33<Z))D\$
-  X1~(123*YZ+1);$
-  I(1=X)@U((3>Y))DRZ,Z123;\%&$
-*/
-
 import java.io.*;
 public class A1
 {
