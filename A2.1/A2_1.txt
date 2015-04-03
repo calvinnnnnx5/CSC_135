@@ -1,0 +1,28 @@
+Problem Set:
+
+1. The volume of a sphere of radius r is
+
+   volume = 4 * 3.14 * r3 / 3
+
+   Write a function sphere-volume that takes one argument, radius, and
+   returns the volume of the sphere with that radius. Then write a new function,
+   shell-volume, that takes two arguments, inner-radius and outer-radius, and
+   finds the volume of a hollow spherical shell with the appropriate inner and
+   outer radii. (What we want is the volume between the two spheres.)
+
+2. Write a predicate function close? which takes two numbers as arguments and returns #t
+   if they are within, say, .001 of each other. You then extend this to write a new version
+   of close? which takes three arguments -- number-1, number-2, and limit -- and returns #t
+   if the two numbers are within a distance of limit from each other.
+
+4. Write a function filter-out-symbol that takes as argument a list and a symbol and turns
+   a list whose elements are the same as the argument list except with all instances of the
+   symbol deleted. For example, evaluating (filter-out-symbol '(no no a thousand times no) 'no)
+   should return the list (a thousand times).
+
+5. Write a function that computes the maximum and minimum of a list of integers.
+   Suggest function name (pMinMax L).
+
+6. Write a higher-order function inc_n that takes an integer n as a parameter and returns
+   an n-th increment function, which increments its parameter by n. Thus in Scheme syntax,
+   ((inc_n 3) 2) =5 and ((inc_n -2) 3) =1. Suggest function name: (incnth n)
