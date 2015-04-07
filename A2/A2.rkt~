@@ -1,0 +1,33 @@
+#lang racket
+
+;; Problem A "veryLucky"
+;; =============================================================================
+  ;Int is "veryLucky" if every one of its digits is 6 or 8, function returns (#t)true
+  ;or (#f)false. Must work for +/- #'s. Can use modulo and integer division function.
+
+(define (veryLucky x)
+  
+
+
+;; Problem B "firstMidLast"
+;; =============================================================================
+  ;Accept list and return list of 3 elements (first, mid and last elements of original list).
+  ;Assume incoming list is 3<= elements and is odd length.
+
+;; Problem C "shuffleListHalves"
+;; =============================================================================
+  ;Accept list, break it in half and build new list that alternates the elements
+  ;of the 2 list halves. Split list in half then merges together. Should work on
+  ;odd lenght lists. (1 2 3 4 55 66 77 88 99) becomes (1 66 2 77 3 88 4 99 55).
+
+
+;; Problem D "firstFunctionSmaller"
+;; =============================================================================
+  ;take 2 functions F and G and list L. Returns a list with those elements from L where F(L)
+  ;< G(L).
+
+;; Problem E "getNestedBiggest"
+;; =============================================================================
+
+;; Problem F "makePicker"
+;; =============================================================================
