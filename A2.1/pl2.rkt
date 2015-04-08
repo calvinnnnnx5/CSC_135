@@ -38,7 +38,7 @@
    [(= (quadratic a b c) 0) 1]
    [(< (quadratic a b c) 0) 0]))
 
-(define (quadratic a b c)
+(define (quadratic cha b c)
   (- (* b b) (* 4 a c)))
 
 ;; Test Cases

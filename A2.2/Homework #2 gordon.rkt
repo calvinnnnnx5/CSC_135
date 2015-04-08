@@ -1,6 +1,3 @@
-;Irving Rodriguez
-;Homework 2
-;section 1
 ;------------------------Problem A-------------------------------------------------
 (define (fraktorial x)
   (if (< x 1) 1 ;(if (condition) true false)
