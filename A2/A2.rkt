@@ -1,126 +1,138 @@
 #lang racket
 
+;=========================;
+;; Konstantin Polyashenko 
+;; CSC 135 - A2
+;=========================;
+
 ;; Problem A "veryLucky"
 ;; =============================================================================
-  ;Int is "veryLucky" if every one of its digits is 6 or 8, function returns (#t)true
-  ;or (#f)false. Must work for +/- #'s. Can use modulo and integer division function. 
-  ;Assume int is being passed in. 
-
 ;veryLucky -> boolean
 ;given digit see if it contains only 6 and 8
-(define (veryLucky num)
-    (checkParce (string->list (number->string num))))
 
-;take the parcer of sume-of-digits program
-;ASCI-Value minus 48
-(define (parseDigit c)
-    (- (char->integer c) 48))
+(define (veryLucky x)
+  (if (= x 1)
+    #f
+    (if (<= x 1)
+      #t
+      (if (and (not(= (modulo x 10) 6))(not(= (modulo x 10) 8)))
+        #f
+        (veryLucky(floor (/ x 10)))))))
 
-(define (checkMod M)
-  (or (equal? (modulo M 6)0) (equal? (modulo M 8)0)))
-  
- 
-;sums a list of characters as integers
-;(addDigitString (list #\1 #\2))
-(define (checkParce charList)
-    (cond 
-        [(= 1 (length charList)) (checkMod(parseDigit (first charList)))]
-        [else ( checkMod (parseDigit (first charList))) (checkParce (rest charList))]
-    )
-)
+;;tested with
+;(veryLucky 866) -> #t
 
 ;; Problem B "firstMidLast"
 ;; =============================================================================
-  ;Accept list and return list of 3 elements (first, mid and last elements of original list).
-  ;Assume incoming list is 3<= elements and is odd length. 
-  ;(firstMidLast '(10 11 12 13 14 15 16) returns (10 13 16)
-
 ;firstMidLast -> list
 ;given list output list with first mid and last values
 
 (define (firstMidLast l)
-  (list (car l) (getNth (quotient(howMany l) 2) l) (lastElement l)))
+  (list (car l) (getVal (quotient(listSize l) 2) l) (lastListVal l)))
 
-;returns last element of list
-(define (lastElement l)
-  (cond ((null? (cdr l)) (car l))
-        (else (lastElement (cdr l)))))
-
-(define (index xs y)
-  (for/first ([(x i) (in-indexed xs)]
-              #:when (equal? x y))
-    i))
-
-(define getNth                     
-   (lambda (n list)                   
-      (cond ((null? list) '())             
-            ((= n 0) (car list))              
-            (else (getNth (- n 1) (cdr list))))))
-
-(define (howMany list)
+(define (listSize list)
   (if (null? list)
-      0
-      (+ 1 (howMany (cdr list)))))
+    0
+    (+ 1 (listSize (cdr list)))))
+
+(define (lastListVal l)
+  (cond
+    ((null? (cdr l)) (car l))
+    (else (lastListVal (cdr l)))))
+
+(define getVal
+  (lambda (n list)
+    (cond
+      ((null? list) '())
+      ((= n 0) (car list))
+      (else (getVal (- n 1) (cdr list))))))
+
+;;tested with
+;(firstMidLast '(10 11 12 13 14 15 16)) -> '(10 13 16)
 
 ;; Problem C "shuffleListHalves"
 ;; =============================================================================
-  ;Accept list, break it in half and build new list that alternates the elements
-  ;of the 2 list halves. Split list in half then merges together. Should work on
-  ;odd lenght lists. (1 2 3 4 5 6) becomes (1 4 2 5 3 6) and (1 2 3) becomes (1 3 2)
+;shuffleListHalves -> list
+;given list break in half, alternate list elements and return as a list
 
 (define (listLength list)
-(if (null? list)
+  (if (null? list)
     0
     (+ 1 (listLength (cdr list)))))
 
-(define (firstXOfList list x)
-(if (<= x 0)
-  empty
-  (cons (car list) (firstXOfList (cdr list) (- x 1)))))
+(define (starttodefinedlistElements l x)
+  (if (<= x 0)
+    empty
+    (cons (car l) (starttodefinedlistElements (cdr l) (- x 1)))))
 
-(define (lastXOfList list x)
-(reverse (firstXOfList (reverse list) x)))
+(define (definedtolastlistElements list x)
+  (reverse (starttodefinedlistElements (reverse list) x)))
 
-(define (shuffleTwoLists list1 list2)
-(if (null? list1)
-  list2
-  (if (null? list2)
-    list1
-    (cons (car list1) (cons (car list2) (shuffleTwoLists (cdr list1) (cdr list2)))))))
+(define (listShuffle F G)
+  (if (null? F)
+    G
+    (if (null? G)
+      F
+      (cons (car F) (cons (car G) (listShuffle (cdr F) (cdr G)))))))
 
 (define (shuffleListHalves list)
-(shuffleTwoLists
-(firstXOfList list (ceiling (/ (listLength list) 2)))
-(lastXOfList list (floor (/ (listLength list) 2)))))
+  (listShuffle
+  (starttodefinedlistElements list (ceiling (/ (listLength list) 2)))
+  (definedtolastlistElements list (floor (/ (listLength list) 2)))))
+
+;;tested with
+;(shuffleListHalves '(1 2 3 4 55 66 77 88)) -> '(1 55 2 66 3 77 4 88)
+;(shuffleListHalves '(1 2 3 4 55 66 77 88 99)) -> '(1 66 2 77 3 88 4 99 55)
 
 ;; Problem D "firstFunctionSmaller"
 ;; =============================================================================
-  ;take 2 functions F and G and list L. Returns a list with those elements from L where F(L)
-  ;< G(L).
+;firstFunctionSmaller -> list
+;given list L and functions F and G, returns list of elements from L where F(L)<G(L)
+
+(define (firstFunctionSmaller F G l)
+  (if (null? l)
+    empty
+    (if
+      (< (F (car l)) (G (car l)))
+      (cons (car l) (firstFunctionSmaller F G (cdr l)))
+      (firstFunctionSmaller F G (cdr l)))))
+
+(define (double x) (* x 2)) ;function double x*2
+(define (square x) (* x x)) ;function squared x*x
+
+;;tested with 
+;(firstFunctionSmaller double square '(1 2 -3 7)) -> '(-3 7)
 
 ;; Problem E "getNestedBiggest"
 ;; =============================================================================
-
-;getNestedBiggest -> number
+;getNestedBiggest -> integer
+;given int list return the largest element, must work for nested lists
 
 (define (getNestedBiggest l)
-  (cond ((pair? l) (max (getNestedBiggest (car l)) (getNestedBiggest (cdr l))))
-        ((number? l) l)
-        (else 0)))
+  (cond
+    ((pair? l) (max (getNestedBiggest (car l)) (getNestedBiggest (cdr l))))
+    ((number? l) l)
+    (else 0)))
+
+;;tested with
+;(getNestedBiggest '(2 3 (4 (7 6) 5))) -> 7
 
 ;; Problem F "makePicker"
 ;; =============================================================================
-(define (makeExploder x y) 
-  (define (h L)
-    (if (null? L) '() 
-        (cons (* y (+ x (car L))) (h (cdr L)))
-    )
-   )
- h)
+;makePicker -> integer
+;given integer it builds and returns "pi
 
+(define (makePicker N)
+  (lambda (L)
+  (getValue N L)))
 
+(define getValue
+  (lambda (n list)
+    (cond 
+      ((null? list) '())
+      ((= n 1) (car list))
+      (else (getValue (- n 1) (cdr list))))))
 
-
-
-
-
+;;tested with 
+;(define P (makePicker 5)) -> (P '(4 8 2 9 -1 13)) -> -1
+;(define P (makePicker 5)) -> (P '(-2 3 -4 8 9 1 7)) -> 9
