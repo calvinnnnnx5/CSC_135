@@ -1,0 +1,86 @@
+Computing Theory and Languages
+Homework #3
+due: Monday May 18th at midnight (2 weeks)
+
+-------------------------------------------------------------------------
+
+   1.  Implement a rule "spiralDown", that takes a positive integer n and
+       produces a list that counts down from n to 0, including negative
+       copies of the values along the way.  For example:  spiralDown(4,L)
+       should respond with:  L=[4,-4,3,-3,2,-2,1,-1,0]
+
+-------------------------------------------------------------------------
+
+   2.  Implement a rule "secondCousinOnceRemoved".
+       For example, secondCousinOnceRemoved(scott,gail) would return true
+       if gail is scott's second cousin, once removed.
+
+       Assume that the only facts available, are "parent" facts of the form:
+         parent(x,y), meaning that person x is a parent of person y.
+
+       For a definition of what is meant by a "second cousin, once removed",
+         see the wikipedia page:  http://en.wikipedia.org/wiki/Cousin
+
+-------------------------------------------------------------------------
+
+   3.  Solve the following cryptarithmetic problem using Prolog:
+
+                         P I N G
+                         P O N G
+                       +   F U N
+                       ---------
+                       I G N I P
+
+       Each of the 7 different letters stands for a different digit.
+       The aim is to find a substitution of digits for the letters such
+       that the resulting sum is arithmetically correct.  Your program
+       should find ALL answers, that do not have leading zeros.
+
+       It should be possible to query your solution in this manner:
+
+          ?- crypto(P,I,N,G,O,F,U).
+
+       Your solution should then produce all of the combinations of
+       the digits that satisfy the addition problem above.  Don't get
+       confused between the letter "O" and the number "0" (zero).
+
+       make sure you never let P=N, or G=F, etc... all of the distinct
+       letters have to stand for distinct digits.
+
+       Use generate-and-test.
+
+-------------------------------------------------------------------------
+
+   4.  Implement a rule called "stepWith", that takes three parameters,
+       a list L and two integers i and j.  The rule returns true, if the
+       value i can be "stepped" into the value j, using only legal "steps".
+       The list L provides a set of integers that make up the legal steps.
+
+       For example, stepWith([7,12,19],6,32) would return true, because,
+       starting at 6, there exists at least one sequence of additions using
+       only the numbers in the list (7, 3, and 12), producing 28.  Namely:
+       6+7+7+12 = 32.
+
+       By contrast, stepWith([7,12,19],6,31) would be an example that should
+       return false, since there is no sequence of additions starting from 6,
+       and using only the values 7, 12, and 19, that results in 31.
+
+       Make sure that your rule works for various values, and various size
+       lists for L.  You can assume that all of the integers are positive,
+       and that i is less than j.
+
+-------------------------------------------------------------------------
+
+   5.  Convert "firstMidLast" from the homework#2 Scheme assignment, to Prolog.
+         Of course, you will need to add an additional parameter to hold the answer.
+
+       For example,
+         firstMidLast ([10,11,12,13,14,15,16],Answer). should respond:
+         Answer = [10,13,16]
+
+       You may use your Scheme solution (or the posted one) as a starting point
+       (although that isn't necessary).
+
+-------------------------------------------------------------------------
+
+Submit your solutions in a single file.
