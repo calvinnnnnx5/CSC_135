@@ -28,7 +28,7 @@ Konstantin Polyashenko
       P I N G
       P O N G
     +   F U N
-     ---------
+    ---------
     I G N I P
 
     Each of the 7 different letters stands for a different digit.
