@@ -74,7 +74,7 @@ Konstantin Polyashenko
     Of course, you will need to add an additional parameter to hold the answer.
 
     For example,
-      firstMidLast ([10,11,12,13,14,15,16],Answer). should respond:
+      firstMidLast([10,11,12,13,14,15,16],Answer). should respond:
       Answer = [10,13,16]
 
     You may use your Scheme solution (or the posted one) as a starting point
