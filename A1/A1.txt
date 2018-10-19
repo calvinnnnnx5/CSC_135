@@ -1,6 +1,6 @@
 2 Programming Languages
 Homework 1
-due Friday Mar 6 at midnight
+due Friday Mar 6 at midnight 12:00:00
 
  Consider the following EBNF grammar for a very simple programming language:
 
